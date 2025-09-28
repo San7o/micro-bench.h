@@ -1,0 +1,71 @@
+micro-bench.h
+-------------
+
+Header-only benchmarking library in C99.
+
+Author:  Giovanni Santini
+Mail:    giovanni.santini@proton.me
+License: MIT
+
+
+Example code
+------------
+
+```
+MicroBench mb = {0};  // define a micro benchmark
+
+for (int i = 0; i < 10; ++i) // Repeat a few times
+{
+   micro_bench_start(&mb); // start benchmark
+   fib(35);                // Do something...
+   micro_bench_stop(&mb);  // end benchmark
+}
+
+micro_bench_report(&mb);   // the default reporter prints to stdout
+```
+
+Example output
+--------------
+
+/------------------------\
+| Micro benchmark report |
+|------------------------|
+|   min    |  0.0626740  |
+|   max    |  0.0746470  |
+|   sum    |  0.6480160  |
+|   mean   |  0.0648016  |
+|   var    |  0.0000125  |
+|   it     |         10  |
+\------------------------/
+
+
+Usage
+-----
+
+Do this:
+
+  #define MICRO_BENCH_IMPLEMENTATION
+
+before you include the header file in *one* C or C++ file to create
+the implementation.
+
+i.e. it should look like this:
+
+  #include ...
+  #include ...
+  #include ...
+  #define MICRO_BENCH_IMPLEMENTATION
+  #include "micro-bench.h"
+
+Code
+----
+
+The official git repository of micro-bench.h is hosted at:
+
+    https://github.com/San7o/micro-bench.h
+
+This is part of a bigger collection of header-only C99 libraries
+called "micro-headers", contributions are welcome:
+
+    https://github.com/San7o/micro-headers
+
