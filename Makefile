@@ -18,7 +18,7 @@ run: $(OUT_NAME)
 	./$(OUT_NAME)
 
 $(OUT_NAME): $(OBJ)
-	$(CC) $(OBJ) $(LDFLAGS) $(CLAGS) -o $(OUT_NAME)
+	$(CC) $(OBJ) $(LDFLAGS) $(CFLAGS) -o $(OUT_NAME)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@

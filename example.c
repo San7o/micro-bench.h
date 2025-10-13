@@ -17,7 +17,7 @@ int main(void)
   micro_bench_clear(&mb);
 
   printf("Calculating fibonacci numbers...\n");
-  for (int i = 0; i < 10; ++i)
+  for (volatile int i = 0; i < 10; ++i)
   {
     micro_bench_start(&mb);
 
@@ -27,8 +27,10 @@ int main(void)
     micro_bench_stop(&mb);
   }
 
-  double mean = micro_bench_get_mean(&mb);
-  printf("\nMean time is: %f seconds\n", mean);
+  double mean_real = micro_bench_get_mean_real(&mb);
+  double mean_cpu = micro_bench_get_mean_cpu(&mb);
+  printf("\nMean real time is: %f seconds\n", mean_real);
+  printf("\nMean cpu time is: %f seconds\n", mean_cpu);
 
   // Print min, max, mean, variance, sum...
   micro_bench_report(&mb);
