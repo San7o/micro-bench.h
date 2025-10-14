@@ -11,18 +11,18 @@ License: MIT
 Example code
 ------------
 
-```
-MicroBench mb = {0};  // define a micro benchmark
 
-for (int i = 0; i < 10; ++i) // Repeat a few times
-{
-   micro_bench_start(&mb); // start benchmark
-   fib(35);                // Do something...
-   micro_bench_stop(&mb);  // end benchmark
-}
+    MicroBench mb = {0};  // define a micro benchmark
 
-micro_bench_report(&mb);   // the default reporter prints to stdout
-```
+    for (int i = 0; i < 10; ++i) // Repeat a few times
+    {
+       micro_bench_start(&mb); // start benchmark
+       fib(35);                // Do something...
+       micro_bench_stop(&mb);  // end benchmark
+    }
+
+    micro_bench_report(&mb);   // the default reporter prints to stdout
+
 
 Example output
 --------------

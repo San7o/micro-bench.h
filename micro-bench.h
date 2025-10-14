@@ -14,18 +14,18 @@
 // Example code
 // ------------
 //
-// ```
-// MicroBench mb = {0};  // define a micro benchmark
+// 
+//   MicroBench mb = {0};  // define a micro benchmark
 //
-// for (int i = 0; i < 10; ++i) // Repeat a few times
-// {
-//    micro_bench_start(&mb); // start benchmark
-//    fib(35);                // Do something...
-//    micro_bench_stop(&mb);  // end benchmark
-// }
+//   for (int i = 0; i < 10; ++i) // Repeat a few times
+//   {
+//      micro_bench_start(&mb); // start benchmark
+//      fib(35);                // Do something...
+//      micro_bench_stop(&mb);  // end benchmark
+//   }
 //
-// micro_bench_report(&mb);   // the default reporter prints to stdout
-// ```
+//   micro_bench_report(&mb);   // the default reporter prints to stdout
+//
 //
 // Example output
 // --------------
@@ -77,14 +77,25 @@
 //     https://github.com/San7o/micro-headers
 //
 
-#ifndef _MICRO_BENCH_H_
-#define _MICRO_BENCH_H_
+#ifndef MICRO_BENCH
+#define MICRO_BENCH
 
 #define MICRO_BENCH_MAJOR 0
 #define MICRO_BENCH_MINOR 1
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+//
+// Configuration
+//
+
+// Config: Prefix for all functions
+// For function inlining, set this to `static inline` and then define
+// the implementation in all the files
+#ifndef MICRO_BENCH_DEF
+  #define MICRO_BENCH_DEF extern
 #endif
 
 //
@@ -137,36 +148,39 @@ typedef struct {
 //
 // Time data will be recorded and saved internally.
 // Note: you need to call `micro_bench_stop` to end it.
-void micro_bench_start(MicroBench *mb);
+MICRO_BENCH_DEF void micro_bench_start(MicroBench *mb);
 
 // Stop a benchmark  
-void micro_bench_stop(MicroBench *mb);
+MICRO_BENCH_DEF void micro_bench_stop(MicroBench *mb);
 
 // Reset internal benchmark data captured so far
-void micro_bench_clear(MicroBench *mb);
+MICRO_BENCH_DEF void micro_bench_clear(MicroBench *mb);
 
 // Getters for either real time and cpu time
-double micro_bench_get_min_real(MicroBench *mb);
-double micro_bench_get_min_cpu(MicroBench *mb);
-double micro_bench_get_max_real(MicroBench *mb);
-double micro_bench_get_max_cpu(MicroBench *mb);
-double micro_bench_get_mean_real(MicroBench *mb);
-double micro_bench_get_mean_cpu(MicroBench *mb);
-double micro_bench_get_sum_real(MicroBench *mb);
-double micro_bench_get_sum_cpu(MicroBench *mb);
-double micro_bench_get_variance_real(MicroBench *mb);
-double micro_bench_get_variance_cpu(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_min_real(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_min_cpu(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_max_real(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_max_cpu(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_mean_real(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_mean_cpu(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_sum_real(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_sum_cpu(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_variance_real(MicroBench *mb);
+MICRO_BENCH_DEF double micro_bench_get_variance_cpu(MicroBench *mb);
 
 // Print recorded information to stdout in a nice box
-void micro_bench_default_reporter_stdout(MicroBenchData *data);
+MICRO_BENCH_DEF void
+micro_bench_default_reporter_stdout(MicroBenchData *data);
 // Print recorded information to stout as CSV
-void micro_bench_default_reporter_csv(MicroBenchData *data);
+MICRO_BENCH_DEF void
+micro_bench_default_reporter_csv(MicroBenchData *data);
 
 // Report benchmark data with the default stdout reporter
-void micro_bench_report(MicroBench *mb);
+MICRO_BENCH_DEF void micro_bench_report(MicroBench *mb);
 // Report benchmark data with a specific [reporter]
-void micro_bench_report_with(MicroBench *mb,
-                             MicroBenchReporter reporter);
+MICRO_BENCH_DEF void
+micro_bench_report_with(MicroBench *mb,
+                        MicroBenchReporter reporter);
 
 //
 // Implementation
@@ -176,7 +190,7 @@ void micro_bench_report_with(MicroBench *mb,
 
 #include <stdio.h>
 
-void micro_bench_start(MicroBench *mb)
+MICRO_BENCH_DEF void micro_bench_start(MicroBench *mb)
 {
   if (!mb) return;
   mb->start_time_cpu = clock();
@@ -184,7 +198,7 @@ void micro_bench_start(MicroBench *mb)
   return;
 }
 
-void micro_bench_stop(MicroBench *mb)
+MICRO_BENCH_DEF void micro_bench_stop(MicroBench *mb)
 {
   if (!mb) return;
   
@@ -224,7 +238,7 @@ void micro_bench_stop(MicroBench *mb)
   return;
 }
 
-void micro_bench_clear(MicroBench *mb)
+MICRO_BENCH_DEF void micro_bench_clear(MicroBench *mb)
 {
   if (!mb) return;
   mb->data = (MicroBenchData){0};
@@ -233,58 +247,58 @@ void micro_bench_clear(MicroBench *mb)
   return;
 }
 
-  
-double micro_bench_get_min_real(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_min_real(MicroBench *mb)
 {
   return mb->data.min_real;
 }
   
-double micro_bench_get_min_cpu(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_min_cpu(MicroBench *mb)
 {
   return mb->data.min_cpu;
 }
 
-double micro_bench_get_max_real(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_max_real(MicroBench *mb)
 {
   return mb->data.max_real;
 }
   
-double micro_bench_get_max_cpu(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_max_cpu(MicroBench *mb)
 {
   return mb->data.max_cpu;
 }
 
-double micro_bench_get_mean_real(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_mean_real(MicroBench *mb)
 {
   return mb->data.mean_real;
 }
 
-double micro_bench_get_mean_cpu(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_mean_cpu(MicroBench *mb)
 {
   return mb->data.mean_cpu;
 }
 
-double micro_bench_get_sum_real(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_sum_real(MicroBench *mb)
 {
   return mb->data.max_real;
 }
 
-double micro_bench_get_sum_cpu(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_sum_cpu(MicroBench *mb)
 {
   return mb->data.max_cpu;
 }
 
-double micro_bench_get_variance_real(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_variance_real(MicroBench *mb)
 {
   return mb->data.variance_real;
 }
 
-double micro_bench_get_variance_cpu(MicroBench *mb)
+MICRO_BENCH_DEF double micro_bench_get_variance_cpu(MicroBench *mb)
 {
   return mb->data.variance_cpu;
 }
 
-void micro_bench_default_reporter_stdout(MicroBenchData *data)
+MICRO_BENCH_DEF void
+micro_bench_default_reporter_stdout(MicroBenchData *data)
 {
   printf("\n");
   printf("/---------------------------------------\\\n");
@@ -303,7 +317,8 @@ void micro_bench_default_reporter_stdout(MicroBenchData *data)
   return;
 }
 
-void micro_bench_default_reporter_csv(MicroBenchData *data)
+MICRO_BENCH_DEF void
+micro_bench_default_reporter_csv(MicroBenchData *data)
 {
   printf("min_real,min_cpu,sum_real,sum_cpu,mean_real,mean_cpu,variance_real,variance_cpu,iterations\n");
   printf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%ld\n",
@@ -313,14 +328,15 @@ void micro_bench_default_reporter_csv(MicroBenchData *data)
   return;
 }
   
-void micro_bench_report(MicroBench *mb)
+MICRO_BENCH_DEF void micro_bench_report(MicroBench *mb)
 {
   micro_bench_report_with(mb, micro_bench_default_reporter_stdout);
   return;
 }
 
-void micro_bench_report_with(MicroBench *mb,
-                             MicroBenchReporter reporter)
+MICRO_BENCH_DEF void
+micro_bench_report_with(MicroBench *mb,
+                        MicroBenchReporter reporter)
 {
   reporter(&mb->data);
   return;
@@ -371,4 +387,4 @@ int main(void)
 }
 #endif
 
-#endif // _MICRO_BENCH_H_
+#endif // MICRO_BENCH
